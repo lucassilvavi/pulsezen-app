@@ -37,6 +37,13 @@
     ],
     "experiments": {
       "typedRoutes": true
-    }
+    },
+    "extra": {
+      "router": {},
+      "eas": {
+        "projectId": "bc440f0b-15bf-4a15-b1fc-55a31c1d68a9"
+      }
+    },
+    "owner": "lucassilvavi"
   }
 }
