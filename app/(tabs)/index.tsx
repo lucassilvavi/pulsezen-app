@@ -1,75 +1,143 @@
-import { Image } from 'expo-image';
-import { Platform, StyleSheet } from 'react-native';
+import { View, Text, StyleSheet, ScrollView, TouchableOpacity } from 'react-native';
+import { Link } from 'expo-router';
+import { useTheme } from '../../hooks/useTheme';
+import { Ionicons } from '@expo/vector-icons';
+import { BlurView } from 'expo-blur';
 
-import { HelloWave } from '@/components/HelloWave';
-import ParallaxScrollView from '@/components/ParallaxScrollView';
-import { ThemedText } from '@/components/ThemedText';
-import { ThemedView } from '@/components/ThemedView';
+const quickActions = [
+  {
+    title: 'Respiração',
+    icon: 'leaf-outline',
+    color: '#4CAF50',
+    route: '/breathing',
+  },
+  {
+    title: 'Diário',
+    icon: 'journal-outline',
+    color: '#2196F3',
+    route: '/journal',
+  },
+  {
+    title: 'Humor',
+    icon: 'heart-outline',
+    color: '#E91E63',
+    route: '/mood',
+  },
+  {
+    title: 'Sono',
+    icon: 'moon-outline',
+    color: '#9C27B0',
+    route: '/sleep',
+  },
+];
 
 export default function HomeScreen() {
+  const { colors } = useTheme();
+
   return (
-    <ParallaxScrollView
-      headerBackgroundColor={{ light: '#A1CEDC', dark: '#1D3D47' }}
-      headerImage={
-        <Image
-          source={require('@/assets/images/partial-react-logo.png')}
-          style={styles.reactLogo}
-        />
-      }>
-      <ThemedView style={styles.titleContainer}>
-        <ThemedText type="title">Welcome!</ThemedText>
-        <HelloWave />
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 1: Try it</ThemedText>
-        <ThemedText>
-          Edit <ThemedText type="defaultSemiBold">app/(tabs)/index.tsx</ThemedText> to see changes.
-          Press{' '}
-          <ThemedText type="defaultSemiBold">
-            {Platform.select({
-              ios: 'cmd + d',
-              android: 'cmd + m',
-              web: 'F12',
-            })}
-          </ThemedText>{' '}
-          to open developer tools.
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 2: Explore</ThemedText>
-        <ThemedText>
-          {`Tap the Explore tab to learn more about what's included in this starter app.`}
-        </ThemedText>
-      </ThemedView>
-      <ThemedView style={styles.stepContainer}>
-        <ThemedText type="subtitle">Step 3: Get a fresh start</ThemedText>
-        <ThemedText>
-          {`When you're ready, run `}
-          <ThemedText type="defaultSemiBold">npm run reset-project</ThemedText> to get a fresh{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> directory. This will move the current{' '}
-          <ThemedText type="defaultSemiBold">app</ThemedText> to{' '}
-          <ThemedText type="defaultSemiBold">app-example</ThemedText>.
-        </ThemedText>
-      </ThemedView>
-    </ParallaxScrollView>
+    <View style={[styles.container, { backgroundColor: colors.background }]}>
+      <ScrollView style={styles.scrollView}>
+        <View style={styles.header}>
+          <Text style={[styles.title, { color: colors.text }]}>
+            Olá, Bem-vindo!
+          </Text>
+          <Text style={[styles.subtitle, { color: colors.text }]}>
+            Como você está se sentindo hoje?
+          </Text>
+        </View>
+
+        <View style={styles.quickActionsContainer}>
+          {quickActions.map((action, index) => (
+            <Link key={index} href={action.route} asChild>
+              <TouchableOpacity
+                style={[styles.actionCard, { backgroundColor: colors.card }]}
+              >
+                <View style={[styles.iconContainer, { backgroundColor: action.color + '20' }]}>
+                  <Ionicons name={action.icon as any} size={24} color={action.color} />
+                </View>
+                <Text style={[styles.actionTitle, { color: colors.text }]}>
+                  {action.title}
+                </Text>
+              </TouchableOpacity>
+            </Link>
+          ))}
+        </View>
+
+        <View style={styles.sosContainer}>
+          <Link href="/sos" asChild>
+            <TouchableOpacity
+              style={[styles.sosButton, { backgroundColor: colors.error }]}
+            >
+              <Ionicons name="shield-checkmark-outline" size={24} color="#FFFFFF" />
+              <Text style={styles.sosButtonText}>SOS</Text>
+            </TouchableOpacity>
+          </Link>
+        </View>
+      </ScrollView>
+    </View>
   );
 }
 
 const styles = StyleSheet.create({
-  titleContainer: {
+  container: {
+    flex: 1,
+  },
+  scrollView: {
+    flex: 1,
+  },
+  header: {
+    padding: 20,
+    paddingTop: 60,
+  },
+  title: {
+    fontSize: 32,
+    fontWeight: 'bold',
+    marginBottom: 10,
+  },
+  subtitle: {
+    fontSize: 18,
+    opacity: 0.8,
+  },
+  quickActionsContainer: {
+    padding: 20,
+    flexDirection: 'row',
+    flexWrap: 'wrap',
+    justifyContent: 'space-between',
+  },
+  actionCard: {
+    width: '48%',
+    padding: 20,
+    borderRadius: 16,
+    marginBottom: 16,
+  },
+  iconContainer: {
+    width: 48,
+    height: 48,
+    borderRadius: 24,
+    alignItems: 'center',
+    justifyContent: 'center',
+    marginBottom: 12,
+  },
+  actionTitle: {
+    fontSize: 16,
+    fontWeight: '600',
+  },
+  sosContainer: {
+    padding: 20,
+    alignItems: 'center',
+  },
+  sosButton: {
     flexDirection: 'row',
     alignItems: 'center',
-    gap: 8,
+    padding: 16,
+    borderRadius: 12,
+    width: '100%',
+    justifyContent: 'center',
   },
-  stepContainer: {
-    gap: 8,
-    marginBottom: 8,
-  },
-  reactLogo: {
-    height: 178,
-    width: 290,
-    bottom: 0,
-    left: 0,
-    position: 'absolute',
+  sosButtonText: {
+    color: '#FFFFFF',
+    fontSize: 18,
+    fontWeight: '600',
+    marginLeft: 8,
   },
 });
